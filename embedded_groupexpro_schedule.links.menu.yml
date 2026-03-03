@@ -2,5 +2,5 @@
 embeddedgroupexpro.settings:
   route_name: embeddedgroupexpro.settings
   title: 'GroupEx Pro Account Settings'
-  parent: openy_gxp.openy_integrations_groupexpro
+  parent: system.admin_config_services
   description: 'Configure the account settings for the embedded GroupEx Pro schedule.'
