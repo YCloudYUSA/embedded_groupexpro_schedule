@@ -37,12 +37,14 @@ class EmbeddedGroupExProSettingsForm extends ConfigFormBase {
     $url = Url::fromUri('https://www.groupexpro.com/');
     $link = Link::fromTextAndUrl('GroupEx Pro', $url);
 
-    $form['account'] = array(
-      '#type' => 'textfield',
+    $form['account'] = [
+      '#type' => 'number',
       '#title' => $this->t('GroupEx Pro Account'),
-      '#default_value' => $config->get('account'),
-      '#description' => t('Add your @link account id here. It is most likely a short number, like 123.', ['@link' => $link->toString()]),
-    );
+      '#min' => 1,
+      '#step' => 1,
+      '#default_value' => $config->get('account') ?: NULL,
+      '#description' => $this->t('Add your @link account id here. It is most likely a short number, like 123.', ['@link' => $link->toString()]),
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -52,7 +54,7 @@ class EmbeddedGroupExProSettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Retrieve the configuration.
-    $this->config('embedded_groupexpro_schedule.settings')->set('account', $form_state->getValue('account'))->save();
+    $this->config('embedded_groupexpro_schedule.settings')->set('account', (int) $form_state->getValue('account'))->save();
 
     parent::submitForm($form, $form_state);
   }
