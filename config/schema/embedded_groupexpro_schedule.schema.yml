@@ -1,7 +1,7 @@
 embedded_groupexpro_schedule.settings:
   type: config_object
   label: "Settings"
-  mapping: 
+  mapping:
     account:
-      type: string
+      type: integer
       label: "GroupEx Pro Account"

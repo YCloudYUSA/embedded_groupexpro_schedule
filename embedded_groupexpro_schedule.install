@@ -6,33 +6,34 @@
  */
 
 /**
- * Rename config to `embedded_groupexpro_schedule.settings`.
+ * Implements hook_update_last_removed().
  */
-function embedded_groupexpro_schedule_update_8001() {
-  $config_rename_mapping = [
-    'embeddedgroupexpro.settings' => 'embedded_groupexpro_schedule.settings',
-  ];
-
-  foreach ($config_rename_mapping as $old_config_name => $new_config_name) {
-    $old_config = \Drupal::configFactory()->getEditable($old_config_name);
-    $old_config_values = $old_config->get();
-    $old_config->delete();
-
-    $new_config = \Drupal::configFactory()->getEditable($new_config_name);
-    foreach ($old_config_values as $key => $value) {
-      $new_config->set($key, $value);
-    }
-    $new_config->save();
-  }
+function embedded_groupexpro_schedule_update_last_removed() {
+  return 8002;
 }
 
 /**
- * Enable openy_gxp if not enabled.
+ * Store the GroupEx Pro account as an integer.
  */
-function embedded_groupexpro_schedule_update_8002() {
-  $module_handler = \Drupal::moduleHandler();;
-  if ($module_handler->moduleExists('openy_gxp')) {
-    return;
+function embedded_groupexpro_schedule_update_10001() {
+  $config = \Drupal::configFactory()->getEditable('embedded_groupexpro_schedule.settings');
+  $stored = $config->get('account');
+  $account = embedded_groupexpro_schedule_account_from_string((string) $stored);
+  $config->set('account', $account)->save();
+
+  if ($account || $stored === NULL || $stored === '') {
+    return NULL;
   }
-  \Drupal::service('module_installer')->install(['openy_gxp'], FALSE);
+  return t('The stored GroupEx Pro account was not a number and has been cleared. Set it again at /admin/openy/integrations/groupex-pro/groupexpro.');
+}
+
+/**
+ * Returns the account id when the value holds only digits, 0 otherwise.
+ */
+function embedded_groupexpro_schedule_account_from_string(string $value): int {
+  $value = trim($value);
+  if (ctype_digit($value)) {
+    return (int) $value;
+  }
+  return 0;
 }

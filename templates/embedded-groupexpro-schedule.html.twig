@@ -1,11 +1,15 @@
+{#
+  The GroupEx Pro embed script reads these globals and writes the schedule
+  with document.write, so it has to load synchronously right here, after its
+  own jQuery 1.x (it uses event APIs removed in jQuery 3).
+#}
 <script>
   var acct = {{ account }};
   var loc = '';
   var cat = '';
   var stylesheet = '';
   var hideLastnames = true;
-  var jsHost = (("https:" == document.location.protocol) ? "https://" : "http://");
-  document.write("<scr" + "ipt src='" + jsHost + "ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js' type='text/javascript'></scr" + "ipt>");
-  document.write("<scr" + "ipt>var jQuery = jQuery.noConflict(true);</scr" + "ipt>");
-  document.write("<scr" + "ipt src='" + jsHost + "www.groupexpro.com/schedule/embed/schedule_embed_responsive.2.js.php?a=" + acct + "' type='text/javascript'></scr" + "ipt>");
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script>var jQuery = jQuery.noConflict(true);</script>
+<script src="https://www.groupexpro.com/schedule/embed/schedule_embed_responsive.2.js.php?a={{ account }}"></script>
